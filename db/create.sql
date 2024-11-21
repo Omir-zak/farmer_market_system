@@ -1,0 +1,21 @@
+CREATE TABLE users (
+                       id SERIAL PRIMARY KEY,
+                       name VARCHAR(100),
+                       email VARCHAR(100) UNIQUE NOT NULL,
+                       password VARCHAR(255) NOT NULL,
+                       role VARCHAR(20) NOT NULL, -- 'admin', 'farmer', 'buyer'
+                       is_approved BOOLEAN DEFAULT FALSE,
+                        city varchar(60)
+);
+
+CREATE TABLE products (
+                          id SERIAL PRIMARY KEY,
+                          farmer_id INT REFERENCES users(id),
+                          name VARCHAR(100),
+                          category VARCHAR(50),
+                          price NUMERIC(10, 2),
+                          quantity INT,
+                          description TEXT,
+                          images TEXT[], -- Array of image URLs
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

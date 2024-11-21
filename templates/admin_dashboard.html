@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        button {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Admin Dashboard</h1>
+    <h2>Pending Farmer Applications</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>City</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="applications">
+        <!-- Заявки фермеров будут загружаться через JavaScript -->
+        </tbody>
+    </table>
+</div>
+</body>
+<script>
+    fetch('/admin/farmers/pending', {
+        headers: {
+            'Authorization': 'Bearer <your-admin-token>'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            const table = document.getElementById('applications');
+            data.forEach(farmer => {
+                const row = `<tr>
+                <td>${farmer.name}</td>
+                <td>${farmer.email}</td>
+                <td>${farmer.city}</td>
+                <td>
+                    <button onclick="approveFarmer(${farmer.id})">Approve</button>
+                    <button onclick="rejectFarmer(${farmer.id})">Reject</button>
+                </td>
+            </tr>`;
+                table.innerHTML += row;
+            });
+        });
+
+    function approveFarmer(id) {
+        fetch(`/admin/farmers/approve/${id}`, { method: 'POST', headers: { 'Authorization': 'Bearer <your-admin-token>' } });
+    }
+
+    function rejectFarmer(id) {
+        fetch(`/admin/farmers/reject/${id}`, { method: 'POST', headers: { 'Authorization': 'Bearer <your-admin-token>' } });
+    }
+</script>
+</html>
